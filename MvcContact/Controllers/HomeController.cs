@@ -14,11 +14,14 @@ namespace MvcContact.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-
+        IRepositoryPerson _personRepository;
         public HomeController(ILogger<HomeController> logger)
         {
             _logger = logger;
+            _personRepository = RepositoryFactory.CreateRepo("PERSON");
         }
+
+
 
         public IActionResult Index()
         {
@@ -34,9 +37,15 @@ namespace MvcContact.Controllers
         }
 
         [HttpGet]
-        public IActionResult CreatePerson()
+        public IActionResult CreatePerson(int? id)
         {
-            return View();
+            Person model = new Person();
+            if (id.HasValue && id>0)
+            {
+               List<Person> people= _personRepository.List();
+                model = people.First(c=>c.Id==id);
+            }
+            return View(model);
         }
 
         [HttpPost]
@@ -48,6 +57,14 @@ namespace MvcContact.Controllers
             
 
     
+        }
+
+
+
+        public IActionResult Delete (int id)
+        {
+            _personRepository.Delete(id);
+            return RedirectToAction("Index");
         }
 
 

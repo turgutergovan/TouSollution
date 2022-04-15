@@ -11,6 +11,8 @@ namespace DataAccessLayer.Repositories
     {
         void AddOrUpdate(Person person);
         void Delete(Person person);
+
+        void Delete(int id);
         List<Person> List();
         void SaveChanges();
     }
